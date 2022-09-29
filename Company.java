@@ -1,7 +1,12 @@
 public class Company{
     int classement[];
-
-    public Company(int[] ranking){
+    String name;
+    public Company(String name, int[] ranking){
         this.classement = ranking;
+        this.name = name;
+    }
+
+    public String toString(){
+        return this.name;
     }
 }
