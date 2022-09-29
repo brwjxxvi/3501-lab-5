@@ -5,23 +5,16 @@ import javax.smartcardio.ATR;
 
 public class Main {
     public static void main(String[] args){
-        Programmer[] programmers = new Programmer[]{ 
-            new Programmer(new String[] {"B", "A", "C"}),
-            new Programmer(new String[] {"A", "B", "C"}),
-            new Programmer(new String[] {"A", "C", "B"})
-        };
 
-        Company[] companies = new Company[]{
-            new Company(new int[] {3, 1, 2}),
-            new Company(new int[] {1, 2, 3}),
-            new Company(new int[] {1, 3, 2})
-        };
+        char[][] programmers = {{'b','a','c'}, {'b','a','c'}, {'b','c','a'}};
+        int[][] companies = {{3,1,2}, {1,2,3}, {1,3,2}};
 
+        System.out.println(Arrays.deepToString(programmers));
         hirePeople(programmers, companies);
     }
 
-    public static void hirePeople(Programmer[] programmers, Company[] companies){
-        HashMap<Integer, String> partnerships = new HashMap<>();
+    public static void hirePeople(char[][] programmers, int[][] companies){
+        HashMap<Integer, Character> partnerships = new HashMap<>();
         int n = programmers.length;
         if (programmers.length != companies.length){
             System.out.println("Error: number of programmers not equal to the number of companies");
@@ -32,9 +25,9 @@ public class Main {
                 boolean found = false;
                 int counter = 0;
                 while (found == false){
-                    Programmer currentProgrammer = programmers[i]; 
-                    if (!partnerships.containsValue(currentProgrammer.classement[counter])){
-                        partnerships.put(i, currentProgrammer.classement[counter]);
+                    char[] currentProgrammer = programmers[i]; 
+                    if (!partnerships.containsValue(currentProgrammer[counter])){
+                        partnerships.put(i, currentProgrammer[counter]);
                         found = true;
                     }
                     else {
@@ -43,22 +36,28 @@ public class Main {
                 }
             }
         }
-        for (int i = 0; i< n; i++){
-            String companyRank = partnerships.get(i);
-            if (companyRank != programmers[i].classement[0]){
-                for (int j = findIndex(programmers[i].classement, companyRank); j > 0; j--){
-                    if (findIndexInt(companies[j].classement, i) < findIndexInt(partnerships.getKey())
+        for (int i = 0; i< n; i++){ 
+                for (int j=0; j <  findIndex(programmers[i], partnerships.get(i)); j++){
+                    char companyJName = (char)(j + 97);
+                    int companyJProgrammer = getKey(partnerships, companyJName);
+                    if ( findIndexInt(companies[j], i+1) < findIndexInt(companies[j], companyJProgrammer )){
+                        char tempCompany = partnerships.get(i);
+                        partnerships.put(i, companyJName);
+                        partnerships.put(companyJProgrammer, tempCompany);
+                    }
+                    
                 }
-            }
         }
         System.out.println(partnerships.toString());
     }
 
+    
+
     // Credit: https://www.geeksforgeeks.org/find-the-index-of-an-array-element-in-java/
-    public static int findIndex(String[] arr, String t)
+    public static int findIndex(char[] arr, char t)
     {
         // Creating ArrayList
-        ArrayList<String> clist = new ArrayList<>();
+        ArrayList<Character> clist = new ArrayList<>();
   
         // adding elements of array
         // to ArrayList
@@ -82,4 +81,18 @@ public class Main {
         // returning index of the element
         return clist.indexOf(t);
     }
+
+    public static int getKey(HashMap<Integer, Character> map, Character value){
+         for(int i =0; i< map.size(); i++)  {
+        // if give value is equal to value from entry
+        // print the corresponding key
+        if(map.get(i) == value) {
+          return i;
+
+        }
+        
+      }
+      return -1;
+    }
+   
 }
