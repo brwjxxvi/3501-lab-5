@@ -6,7 +6,6 @@ public class Main {
         char[][] programmers = {{'b','a','c'}, {'b','a','c'}, {'b','c','a'}};
         int[][] companies = {{3,1,2}, {1,2,3}, {1,3,2}};
 
-        System.out.println(Arrays.deepToString(programmers));
         hirePeople(programmers, companies);
     }
 
@@ -24,7 +23,7 @@ public class Main {
                 while (found == false){
                     char[] currentProgrammer = programmers[i];
                     if (!partnerships.containsValue(currentProgrammer[counter])){
-                        partnerships.put(i, currentProgrammer[counter]);
+                        partnerships.put(i + 1, currentProgrammer[counter]);
                         found = true;
                     }
                     else {
@@ -33,15 +32,19 @@ public class Main {
                 }
             }
         }
-        for (int i = 0; i< n; i++){
-            for (int j=0; j <  findIndex(programmers[i], partnerships.get(i)); j++){
-                char companyJName = (char)(j + 97);
+        System.out.println(partnerships.toString());
+        for (int i = 1; i<= n; i++){
+            for (int j=0; j <  findIndex(programmers[i-1], partnerships.get(i)); j++){
+                char companyJName = programmers[i-1][j];
+                int b = ((int) companyJName) - 97;
                 int companyJProgrammer = getKey(partnerships, companyJName);
+                System.out.println("Programmer: " + i + ", Company " + companyJName + " currently employs " + companyJProgrammer);
                 // if company companies[j] likes programmers[i] more than their current programmer AND programmers[i] likes companies[j] more than their current company, swap programmers
-                if ( findIndexInt(companies[j], i+1) < findIndexInt(companies[j], companyJProgrammer) && findIndex(programmers[i], partnerships.get(i)) > findIndex(programmers[i], companyJName)){
+                if ( findIndexInt(companies[b], i) < findIndexInt(companies[b], companyJProgrammer) && findIndex(programmers[i-1], partnerships.get(i)) > findIndex(programmers[i-1], companyJName)){
                     char tempCompany = partnerships.get(i);
                     partnerships.put(i, companyJName);
                     partnerships.put(companyJProgrammer, tempCompany);
+                    i = 1;
                 }
 
             }
@@ -81,9 +84,9 @@ public class Main {
     }
 
     public static int getKey(HashMap<Integer, Character> map, Character value){
-        for(int i =0; i< map.size(); i++)  {
+        for(int i =1; i<= map.size(); i++)  {
             // if give value is equal to value from entry
-            // print the corresponding key
+            // return the corresponding key
             if(map.get(i) == value) {
                 return i;
             }
