@@ -2,7 +2,8 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args){
-
+        
+        // Test values. Can be editted to trial different values.
         char[][] programmers = {{'b','a','c'}, {'b','a','c'}, {'b','c','a'}};
         int[][] companies = {{3,1,2}, {1,2,3}, {1,3,2}};
 
@@ -12,43 +13,38 @@ public class Main {
     public static void hirePeople(char[][] programmers, int[][] companies){
         HashMap<Integer, Character> partnerships = new HashMap<>();
         int n = programmers.length;
-        if (programmers.length != companies.length){
-            System.out.println("Error: number of programmers not equal to the number of companies");
-        }
-        else {
-            // Makes initial partnerships based on the programmer's preferences
-            for (int i = 0; i < n; i++){
-                boolean found = false;
-                int counter = 0;
-                while (found == false){
-                    char[] currentProgrammer = programmers[i];
-                    if (!partnerships.containsValue(currentProgrammer[counter])){
-                        partnerships.put(i + 1, currentProgrammer[counter]);
-                        found = true;
+        // Makes initial partnerships based on the programmer's preferences
+        for (int i = 0; i < n; i++){
+            boolean found = false;
+            int counter = 0;
+            while (found == false){
+                 char[] currentProgrammer = programmers[i];
+                 if (!partnerships.containsValue(currentProgrammer[counter])){
+                     partnerships.put(i + 1, currentProgrammer[counter]);
+                     found = true;
+                        }
+                 else {
+                    counter++;
+                        }
                     }
-                    else {
-                        counter++;
-                    }
-                }
-            }
         }
-        System.out.println(partnerships.toString());
+        
+        // Iterates through programmers, checks for unsatisfactory partnerships
         for (int i = 1; i<= n; i++){
             for (int j=0; j <  findIndex(programmers[i-1], partnerships.get(i)); j++){
                 char companyJName = programmers[i-1][j];
                 int b = ((int) companyJName) - 97;
                 int companyJProgrammer = getKey(partnerships, companyJName);
-                System.out.println("Programmer: " + i + ", Company " + companyJName + " currently employs " + companyJProgrammer);
-                // if company companies[j] likes programmers[i] more than their current programmer AND programmers[i] likes companies[j] more than their current company, swap programmers
+                // if company b likes programmers[i] more than their current programmer AND programmers[i] likes company b more than their current company, swap programmers
                 if ( findIndexInt(companies[b], i) < findIndexInt(companies[b], companyJProgrammer) && findIndex(programmers[i-1], partnerships.get(i)) > findIndex(programmers[i-1], companyJName)){
                     char tempCompany = partnerships.get(i);
                     partnerships.put(i, companyJName);
                     partnerships.put(companyJProgrammer, tempCompany);
                     i = 1;
                 }
-
             }
         }
+        // Prints resulting pairings
         System.out.println(partnerships.toString());
     }
 
